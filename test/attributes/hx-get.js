@@ -135,4 +135,17 @@ describe('hx-get attribute', function() {
       htmx.config.getCacheBusterParam = false
     }
   })
+
+  it('issues a GET request to the current URL when hx-get is empty', function() {
+    var currentUrl = location.href
+    this.server.respondWith('GET', /.*/, function(xhr) {
+      xhr.url.should.equal(currentUrl)
+      xhr.respond(200, {}, 'Clicked!')
+    })
+
+    var btn = make('<button hx-get="">Click Me!</button>')
+    btn.click()
+    this.server.respond()
+    btn.innerHTML.should.equal('Clicked!')
+  })
 })
